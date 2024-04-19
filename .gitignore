@@ -1,3 +1,6 @@
+.godot/
+src/.godot/
+
 # ignore godot import folder and import files
 src/.import/
 *.import

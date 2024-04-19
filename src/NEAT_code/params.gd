@@ -239,8 +239,9 @@ func load_config(config_name: String) -> void:
 	var dir = DirAccess.open("user://param_configs")
 	var config = ConfigFile.new()
 	# If no param configs have been saved yet, save the settings from this file as Default
-	if dir == ERR_INVALID_PARAMETER:
-		dir.make_dir("user://param_configs")
+	if dir == null:
+		DirAccess.open("user://").make_dir("param_configs")
+		dir = DirAccess.open("user://param_configs")
 		save_config("Default")
 	# try to open the specified file, break execution if it doesn't exist
 	else:

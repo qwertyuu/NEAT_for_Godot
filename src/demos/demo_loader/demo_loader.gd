@@ -14,8 +14,13 @@ NOT PART OF THE NEAT TOOLS, EXISTS TO MAKE RUNNING THE DEMOS A BETTER EXPERIENCE
 
 
 func _ready() -> void:
-	"""Connect the button signals to appropriate loading methods
-	""" 
+	"""Ensure user://param_configs exists and connect button signals."""
+	# Ensure the param_configs directory exists
+	if dir == null:
+		DirAccess.open("user://").make_dir("param_configs")
+		dir = DirAccess.open("user://param_configs")
+	
+	# Connect the button signals
 	launchers.get_node("CarLauncher").connect("pressed", Callable(self, "load_car_scene"))
 	launchers.get_node("LanderLauncher").connect("pressed", Callable(self, "load_lander_scene"))
 	launchers.get_node("XorLauncher").connect("pressed", Callable(self, "load_xor_scene"))
