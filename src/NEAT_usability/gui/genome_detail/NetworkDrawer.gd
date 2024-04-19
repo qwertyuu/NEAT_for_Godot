@@ -40,4 +40,4 @@ func _draw():
         draw_circle(draw_pos, 6, draw_col)
         # mark if a loop link is connected to the neuron
         if neuron.loop_back:
-            draw_char(roboto, draw_pos, "L", "", Color.BLACK)
+            draw_char(roboto, draw_pos, "L", 10, Color.BLACK)

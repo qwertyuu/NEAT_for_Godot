@@ -34,7 +34,7 @@ var outputs = []
 # the output that will be returned by the network.
 var output = []
 # the currently used activation func, determined by the Params class.
-var activation_func: FuncRef
+var activation_func: Callable 
 
 class StandaloneNeuron:
     """A tiny class that is internal to this file to emulate the Neuron Class.
@@ -57,9 +57,9 @@ func load_config(network_name: String) -> void:
     of this script accordingly.
     """
     # open the file specified by the network name, store it in a dict
-    var file = File.new()
+    var file = FileAccess.open("user://network_configs/%s.json" % network_name, FileAccess.READ)
     # If it exists, open file and parse it's contents into a dict, else push error
-    if file.open("user://network_configs/%s.json" % network_name, File.READ) != OK:
+    if file != ERR_FILE_NOT_FOUND:
         push_error("file not found"); breakpoint
     var test_json_conv = JSON.new()
     test_json_conv.parse(file.get_as_text())
@@ -90,15 +90,15 @@ func load_config(network_name: String) -> void:
     curr_activation_func = network_data["activation_func"]
     # set the flush-count and make a funcref for the chosen activation func
     flush_count = 1 if is_runtype_active else depth
-    activation_func = funcref(self, curr_activation_func)
+    activation_func = Callable(self, curr_activation_func)
 
 
 static func get_saved_networks() -> Array:
     """Returns an array containing the names of every currently saved network
     """
-    var dir = DirAccess.new()
+    var dir = DirAccess.open("user://network_configs")
     # make a new directory for network configs if necessary
-    if dir.open("user://network_configs") == ERR_INVALID_PARAMETER:
+    if dir == ERR_INVALID_PARAMETER:
         push_error("no networks saved yet")
         return []
     # only show files
@@ -123,7 +123,7 @@ func update(input_values: Array) -> Array:
     # feed the input neurons.
     for i in inputs.size():
         if Params.activate_inputs:
-            inputs[i].output = activation_func.call_func(input_values[i])
+            inputs[i].output = activation_func.call(input_values[i])
         else:
             inputs[i].output = input_values[i]
     # step through every hidden neuron (incl. outputs), sum up their weighted
@@ -134,7 +134,7 @@ func update(input_values: Array) -> Array:
             for connection in neuron.input_connections:
                 var input_neuron = connection[0]; var weight = connection[1]
                 weighted_sum += input_neuron.output * weight
-            neuron.output = activation_func.call_func(weighted_sum, neuron.activation_curve)
+            neuron.output = activation_func.call(weighted_sum, neuron.activation_curve)
     # copy output of output neurons into output array
     output.clear()
     for out_neuron in outputs:

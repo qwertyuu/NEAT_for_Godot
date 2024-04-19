@@ -20,7 +20,7 @@ var outputs = []
 # the output that will be returned by the network.
 var output = []
 # the currently used activation func, determined by the Params class.
-var activation_func: FuncRef
+var activation_func: Callable 
 # Contains all links in the genome. Only needed during save_to_json.
 var enabled_links: Array
 
@@ -67,7 +67,7 @@ func _init(neurons: Dictionary, links: Dictionary) -> void:
     depth = calculate_depth(hiddens)
     flush_count = 1 if Params.is_runtype_active else depth
     # set a funcref to the activation func that will be used
-    activation_func = funcref(self, Params.curr_activation_func)
+    activation_func = Callable(self, Params.curr_activation_func)
 
 
 func update(input_values: Array) -> Array:
@@ -84,7 +84,7 @@ func update(input_values: Array) -> Array:
     # feed the input neurons.
     for i in inputs.size():
         if Params.activate_inputs:
-            inputs[i].output = activation_func.call_func(input_values[i])
+            inputs[i].output = activation_func.call(input_values[i])
         else:
             inputs[i].output = input_values[i]
     # step through every hidden neuron (incl. outputs), sum up their weighted
@@ -95,7 +95,7 @@ func update(input_values: Array) -> Array:
             for connection in neuron.input_connections:
                 var input_neuron = connection[0]; var weight = connection[1]
                 weighted_sum += input_neuron.output * weight
-            neuron.output = activation_func.call_func(weighted_sum, neuron.activation_curve)
+            neuron.output = activation_func.call(weighted_sum, neuron.activation_curve)
     # copy output of output neurons into output array
     output.clear()
     for out_neuron in outputs:
@@ -137,9 +137,9 @@ func save_to_json(name: String) -> void:
     network_data["links"] = link_data
     # now save the dictionary as a json file in the user path
     var file = File.new()
-    var dir = DirAccess.new()
+    var dir = DirAccess.open("user://network_configs")
     # make a new directory for network configs if necessary
-    if dir.open("user://network_configs") == ERR_INVALID_PARAMETER:
+    if dir == ERR_INVALID_PARAMETER:
         dir.make_dir("user://network_configs")
     # save the network in the network directory
     file.open("user://network_configs/%s.json" % name, File.WRITE)

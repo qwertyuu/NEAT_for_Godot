@@ -10,7 +10,7 @@ NOT PART OF THE NEAT TOOLS, EXISTS TO MAKE RUNNING THE DEMOS A BETTER EXPERIENCE
 # user://param_configs/ folder. In a normal project this is not necessary, there
 # should be a "Default.cfg" param config in the user://param_configs/ folder as soon
 # as the project has been run once. this default config can then be changed and renamed.
-@onready var dir = DirAccess.new()
+@onready var dir = DirAccess.open("user://param_configs")
 
 
 func _ready() -> void:

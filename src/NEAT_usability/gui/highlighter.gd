@@ -8,7 +8,7 @@ object (the agent body).
 func _ready() -> void:
     # set the name
     set_name("Highlighter_" + get_parent().name)
-    # draw the circe, then hide it (otherwise every body would have a circle by default)
+    # draw the circle, then hide it (otherwise every body would have a circle by default)
     update()
     hide()
 

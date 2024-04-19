@@ -78,8 +78,8 @@ func _on_SaveNetwork_button_down() -> void:
         name_chooser = LineEdit.new()
         # The default name for a saved genome consists of the current time +
         # the genome id to avoid duplicates
-        var time = OS.get_time()
-        var time_str = "%0*d"%[2, time["hour"]]+"_"+"%0*d"%[2, time["minute"]]+"__"
+        var datetime_str = Time.get_datetime_string_from_system()
+        var time_str = datetime_str.split("T")[1].split(":")[0] + "_" + datetime_str.split("T")[1].split(":")[1] + "__"
         name_chooser.text = time_str + str(inspected_genome.id)
         # change the save button text to show that pressing again will confirm save
         save_button.text = "Confirm Save"
