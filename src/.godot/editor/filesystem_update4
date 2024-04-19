@@ -1,0 +1,3 @@
+res://default_env.tres
+res://demos/demo_loader/DemoLoader.tscn
+res://demos/demo_loader/demo_loader.gd

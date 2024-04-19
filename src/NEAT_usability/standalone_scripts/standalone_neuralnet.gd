@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 """This class builds a neural network that can be used independently without running
 the GeneticAlgorithm or Genome nodes, provided it has access to a network
@@ -61,7 +61,9 @@ func load_config(network_name: String) -> void:
     # If it exists, open file and parse it's contents into a dict, else push error
     if file.open("user://network_configs/%s.json" % network_name, File.READ) != OK:
         push_error("file not found"); breakpoint
-    var network_data = parse_json(file.get_as_text())
+    var test_json_conv = JSON.new()
+    test_json_conv.parse(file.get_as_text())
+    var network_data = test_json_conv.get_data()
     file.close()
     # generate Neurons and put them into appropriate arrays
     for neuron_data in network_data["neurons"]:
@@ -94,13 +96,13 @@ func load_config(network_name: String) -> void:
 static func get_saved_networks() -> Array:
     """Returns an array containing the names of every currently saved network
     """
-    var dir = Directory.new()
+    var dir = DirAccess.new()
     # make a new directory for network configs if necessary
     if dir.open("user://network_configs") == ERR_INVALID_PARAMETER:
         push_error("no networks saved yet")
         return []
     # only show files
-    dir.list_dir_begin(true)
+    dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
     # append every file to saved networks array
     var saved_networks = []
     var file_name = "This is just a placeholder"

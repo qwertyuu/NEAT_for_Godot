@@ -1,5 +1,5 @@
 class_name NeuralNet
-extends Reference
+extends RefCounted
 
 """This class builds a neural network with a very simple update() function which
 takes in an array of inputs with a fixed size and returns outputs of a fixed size.
@@ -60,8 +60,8 @@ func _init(neurons: Dictionary, links: Dictionary) -> void:
             to_neuron.connect_input(from_neuron, link.weight)
     # sort neurons such that they are evaluated left to right, feed_back
     # and loop_back connections are however still delayed (that is desired)
-    hiddens.sort_custom(self, "sort_neurons_by_pos_x")
-    hiddens.sort_custom(self, "sort_neurons_by_pos_y")
+    hiddens.sort_custom(Callable(self, "sort_neurons_by_pos_x"))
+    hiddens.sort_custom(Callable(self, "sort_neurons_by_pos_y"))
     # if networks run on active, every neuron is updated once per update(), if they
     # run snapshot, every n. is activ. often enough until inp. is flushed to outputs
     depth = calculate_depth(hiddens)
@@ -114,8 +114,8 @@ func save_to_json(name: String) -> void:
     network_data["depth"] = depth
     # Save all neurons in sorted order
     var sorted_neurons = all_neurons.values()
-    sorted_neurons.sort_custom(self, "sort_neurons_by_pos_x")
-    sorted_neurons.sort_custom(self, "sort_neurons_by_pos_y")
+    sorted_neurons.sort_custom(Callable(self, "sort_neurons_by_pos_x"))
+    sorted_neurons.sort_custom(Callable(self, "sort_neurons_by_pos_y"))
     var neuron_data = []
     for neuron in sorted_neurons:
         var neuron_save = {
@@ -137,13 +137,13 @@ func save_to_json(name: String) -> void:
     network_data["links"] = link_data
     # now save the dictionary as a json file in the user path
     var file = File.new()
-    var dir = Directory.new()
+    var dir = DirAccess.new()
     # make a new directory for network configs if necessary
     if dir.open("user://network_configs") == ERR_INVALID_PARAMETER:
         dir.make_dir("user://network_configs")
     # save the network in the network directory
     file.open("user://network_configs/%s.json" % name, File.WRITE)
-    file.store_string(JSON.print(network_data, "  "))
+    file.store_string(JSON.stringify(network_data, "  "))
     file.close()
 
 
