@@ -30,10 +30,9 @@ var _drift_factor = wheel_grip_sticky # Determines how much (or little) your veh
 
 # Vehicle velocity and angular velocity. Override rigidbody velocity in physics process
 var _velocity = Vector2()
-var _angular_velocity = 0
 
 # vehicle forward speed
-var speed: int
+var speed: float
 
 # hold a specified num of raycasts in an array to sense the environment
 var raycasters = []
