@@ -59,8 +59,6 @@ func load_config(network_name: String) -> void:
 	# open the file specified by the network name, store it in a dict
 	var file = FileAccess.open("user://network_configs/%s.json" % network_name, FileAccess.READ)
 	# If it exists, open file and parse it's contents into a dict, else push error
-	if file != ERR_FILE_NOT_FOUND:
-		push_error("file not found"); breakpoint
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(file.get_as_text())
 	var network_data = test_json_conv.get_data()

@@ -21,6 +21,10 @@ Innovations="*res://NEAT_code/innovations.gd"
 Params="*res://NEAT_code/params.gd"
 Utils="*res://NEAT_code/utils.gd"
 
+[dotnet]
+
+project/assembly_name="NEAT_for_Godot"
+
 [input]
 
 ui_left={

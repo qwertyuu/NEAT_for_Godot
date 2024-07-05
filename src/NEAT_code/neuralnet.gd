@@ -142,11 +142,10 @@ func save_to_json(name: String) -> void:
 		DirAccess.open("user://").make_dir("network_configs")
 		dir = DirAccess.open("user://network_configs")
 	# save the network in the network directory
-	# var file = File.new()
-	# file.open("user://network_configs/%s.json" % name, File.WRITE)
-	# file.store_string(JSON.stringify(network_data, "  "))
-	# file.close()
-	dir.write_string("user://network_configs/%s.json" % name, JSON.stringify(network_data, "  "))
+	var file = FileAccess.open("user://network_configs/%s.json" % name, FileAccess.WRITE)
+	file.store_string(JSON.stringify(network_data, "  "))
+	file.close()
+	#dir.write_string("user://network_configs/%s.json" % name, JSON.stringify(network_data, "  "))
 
 
 func sort_neurons_by_pos_x(neuron1, neuron2) -> bool:
